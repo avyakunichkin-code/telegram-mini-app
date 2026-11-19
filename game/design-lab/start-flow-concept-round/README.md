@@ -15,3 +15,4 @@
 - [Утверждение](APPROVED.md)
 - [Концепт B без кубиков](concept-b-no-dice.png)
 - [Исходники ассетов в дизайн-системе](../../design/system/assets/Start)
+- [Золотая Монетка и игровые позы](../mascots/APPROVED.md)

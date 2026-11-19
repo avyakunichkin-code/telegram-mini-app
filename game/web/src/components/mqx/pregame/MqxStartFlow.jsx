@@ -6,7 +6,7 @@ import { BrandLogo } from '../../BrandLogo';
 import { MqxButton } from '../primitives/MqxButton';
 import { IconMetricCoins } from '../icons/FinanceMetricIcons';
 import heroes from '../../../assets/start/welcome-heroes.png';
-import coin from '../../../assets/start/monetka-b.png';
+import { monetkaPoses } from '../brand/monetkaPoses';
 import boardFooter from '../../../assets/start/board-footer.png';
 import '../../../styles/mqx/start.css';
 
@@ -87,7 +87,7 @@ export function MqxStartFlow({
               ? <Link className="start-lab__login-link" to={loginLink} onClick={() => setPasswordError(false)}>Уже есть аккаунт</Link>
               : <Action variant="secondary" onClick={() => { setPasswordError(false); move('register'); }}>Создать аккаунт</Action>}
           </form>
-          <img className="start-lab__coin" src={coin} alt="" />
+          <img className="start-lab__coin" src={monetkaPoses.welcome} alt="" />
           <BackAction onClick={onBack} />
         </>}
         {screen === 'empty' && <>
@@ -146,7 +146,7 @@ export function MqxStartFlow({
         {screen === 'intro' && <>
           <Portrait role={role} large />
           <div className="start-lab__panel start-lab__intro">
-            <img src={coin} alt="" />
+            <img src={monetkaPoses.welcome} alt="" />
             <h1>Твой напарник</h1>
             <p>Привет! Помогу разобраться с первыми финансовыми решениями.</p>
           </div>

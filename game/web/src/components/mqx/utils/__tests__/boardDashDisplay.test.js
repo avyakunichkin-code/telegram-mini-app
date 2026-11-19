@@ -43,10 +43,11 @@ describe('BG-1 dashboard display', () => {
         overdueCount: 1,
         needs: { comfort: 0, status: 5, social: 5, health: 5 },
       }),
-      { text: '«Комфорт» на нуле — позаботься о себе', tone: 'risk' },
+      { text: '«Комфорт» на нуле — позаботься о себе', tone: 'risk', pose: 'worried' },
     );
     assert.equal(buildTurnTip({ ...base, overdueCount: 2 }).tone, 'risk');
     assert.equal(buildTurnTip(base).text, 'Забери зарплату до конца хода');
+    assert.equal(buildTurnTip(base).pose, 'salary');
     assert.equal(buildTurnTip({ ...base, salaryAvailable: false }).text, 'Реши события до конца хода');
     assert.equal(
       buildTurnTip({ ...base, salaryAvailable: false, pendingEventsCount: 0 }).text,
@@ -57,6 +58,7 @@ describe('BG-1 dashboard display', () => {
       'Все шаги готовы. Победа с 7-го хода',
     );
     assert.equal(buildTurnTip({ goalView: { phase: 'win' } }).text, 'Победа! Можно играть дальше');
+    assert.equal(buildTurnTip({ goalView: { phase: 'win' } }).pose, 'victory');
     assert.equal(buildTurnTip().text, 'Всё сделано — можно завершать ход');
   });
 
@@ -131,6 +133,7 @@ describe('close preview under «Завершить ход»', () => {
     assert.deepEqual(buildTurnTip({ closePreview: minus, safetyBalance: 45000 }), {
       text: 'Не хватит на расходы — сними из подушки',
       tone: 'risk',
+      pose: 'worried',
     });
     assert.equal(
       buildTurnTip({ closePreview: minus, salaryAvailable: true, safetyBalance: 45000 }).text,

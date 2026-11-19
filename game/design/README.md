@@ -5,7 +5,7 @@
 - **[Карта экспортов](asset-exports.json)** — файлы для приложения, лаба, лендинга и брендбука. Это производные, не самостоятельные оригиналы.
 - **[Архив классической v3](archive/classic-v3/README.md)** — прежняя система и растровые персонажи. Сохранены для истории и совместимости уже существующих импортов приложения.
 
-Источник персонажей — `system/illustrations/characters.js`, новой Монетки — `system/illustrations/monetka.js`. SVG в `system/assets/Characters/`, `Companions/`, `Monetka/` генерируются из этих источников; не редактировать их отдельно.
+Исходник утверждённой Монетки — [золотая Монетка](system/assets/Monetka/monetka-gold.png). SVG персонажей, напарников, прежней Монетки и Квити генерируются из `system/illustrations/characters.js` и `system/illustrations/monetka.js`.
 
 Команды из корня: `node scripts/design-assets.mjs` и `node scripts/design-assets.mjs --check`. Проверка отклоняет изменённые экспорты и незарегистрированные файлы в `game/web/src/assets`.
 

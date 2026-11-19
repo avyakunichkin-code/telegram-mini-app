@@ -1,3 +1,4 @@
+import { DEPOSIT_ANNUAL_RATE_PERCENT, BOND_ANNUAL_RATE_PERCENT } from '../../../constants/investProducts';
 import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { BrandLogo } from '../../BrandLogo';
@@ -32,7 +33,7 @@ export function MqxDesktopPreview() {
   const [sheet, setSheet] = useState(null);
   const [history, setHistory] = useState([['В подушку', -5000], ['Подработка', 3000]]);
   const [notice, setNotice] = useState('');
-  const [positions, setPositions] = useState([{ id: 1, kind: 'deposit', title: 'Вклад', principal: 20000, annual_rate_percent: 14 }]);
+  const [positions, setPositions] = useState([{ id: 1, kind: 'deposit', title: 'Вклад', principal: 20000, annual_rate_percent: DEPOSIT_ANNUAL_RATE_PERCENT }]);
   const goal = Math.min(5, Math.floor(reserve / 7500));
   const dialogRef = useRef(null);
   useEffect(() => {
@@ -124,7 +125,7 @@ export function MqxDesktopPreview() {
             if (!(principal > 0 && principal <= cash)) return;
             const title = kind === 'deposit' ? 'Вклад' : 'Облигации';
             record(title, -principal);
-            setPositions([...positions, { id: Math.max(0, ...positions.map((row) => row.id)) + 1, kind, title, principal, annual_rate_percent: kind === 'deposit' ? 14 : 16 }]);
+            setPositions([...positions, { id: Math.max(0, ...positions.map((row) => row.id)) + 1, kind, title, principal, annual_rate_percent: kind === 'deposit' ? DEPOSIT_ANNUAL_RATE_PERCENT : BOND_ANNUAL_RATE_PERCENT }]);
           },
           onClose: (id) => {
             const position = positions.find((row) => row.id === id);

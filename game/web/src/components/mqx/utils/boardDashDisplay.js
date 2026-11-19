@@ -47,7 +47,7 @@ export function lowestNeedAxis(needs) {
  * Монетка одной строкой — самое срочное в этом ходу.
  * Порядок: риск поражения по потребностям → просрочка → минус после хода → зарплата → события → шаг цели.
  * `closePreview` — из `closePreviewView`; `safetyBalance` — подушка (подскажем снять, PR-07).
- * @returns {{ text: string, tone: 'risk' | 'normal' }}
+ * @returns {{ text: string, tone: 'risk' | 'normal', pose: string }}
  */
 export function buildTurnTip({
   needs = null,
@@ -62,29 +62,29 @@ export function buildTurnTip({
   if (Number(needsZeroStreak) > 0) {
     const axis = lowestNeedAxis(needs);
     const label = axis ? `«${axis.label}»` : 'Потребность';
-    return { text: `${label} на нуле — позаботься о себе`, tone: 'risk' };
+    return { text: `${label} на нуле — позаботься о себе`, tone: 'risk', pose: 'worried' };
   }
   if (Number(overdueCount) > 0) {
-    return { text: 'Есть просрочка — погаси долг в «Капитале»', tone: 'risk' };
+    return { text: 'Есть просрочка — погаси долг в «Капитале»', tone: 'risk', pose: 'worried' };
   }
   if (closePreview?.negative) {
     // Превью без зарплаты: не забрана — в конце хода её не будет (C-2).
-    if (salaryAvailable) return { text: 'Не хватит на расходы — забери зарплату', tone: 'risk' };
-    if (Number(safetyBalance) > 0) return { text: 'Не хватит на расходы — сними из подушки', tone: 'risk' };
-    return { text: 'Не хватит на расходы хода — уйдёшь в минус', tone: 'risk' };
+    if (salaryAvailable) return { text: 'Не хватит на расходы — забери зарплату', tone: 'risk', pose: 'worried' };
+    if (Number(safetyBalance) > 0) return { text: 'Не хватит на расходы — сними из подушки', tone: 'risk', pose: 'worried' };
+    return { text: 'Не хватит на расходы хода — уйдёшь в минус', tone: 'risk', pose: 'worried' };
   }
-  if (salaryAvailable) return { text: 'Забери зарплату до конца хода', tone: 'normal' };
-  if (Number(pendingEventsCount) > 0) return { text: 'Реши события до конца хода', tone: 'normal' };
+  if (salaryAvailable) return { text: 'Забери зарплату до конца хода', tone: 'normal', pose: 'salary' };
+  if (Number(pendingEventsCount) > 0) return { text: 'Реши события до конца хода', tone: 'normal', pose: 'surprised' };
 
   const phase = goalView?.phase;
   if (phase === 'active' && goalView.currentGoal?.title) {
-    return { text: `Шаг цели: ${goalView.currentGoal.title}`, tone: 'normal' };
+    return { text: `Шаг цели: ${goalView.currentGoal.title}`, tone: 'normal', pose: 'think' };
   }
   if (phase === 'gate') {
-    return { text: `Все шаги готовы. ${victoryFromTurn(goalView.minPeriod)}`, tone: 'normal' };
+    return { text: `Все шаги готовы. ${victoryFromTurn(goalView.minPeriod)}`, tone: 'normal', pose: 'ready' };
   }
-  if (phase === 'win') return { text: 'Победа! Можно играть дальше', tone: 'normal' };
-  return { text: 'Всё сделано — можно завершать ход', tone: 'normal' };
+  if (phase === 'win') return { text: 'Победа! Можно играть дальше', tone: 'normal', pose: 'victory' };
+  return { text: 'Всё сделано — можно завершать ход', tone: 'normal', pose: 'ready' };
 }
 
 /**

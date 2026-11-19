@@ -129,7 +129,7 @@ npx serve .
 | 15 | **`board-game/screens-round/`** ★ BG-2 (2026-10-15) | события, Капитал, Аналитика, Меню, Вход, Выбор жизни, финал, таббар |
 | 16 | **`board-game/frames-round/`** ★ BG-3 E + **`close-preview-round/`** ★ A (2026-10-25/26) | `DashboardPremium`, «Капитал · Действия», Аналитика; `MqxDashboardHero` (превью списания) |
 | 17 | **`board-game/neobrutal-round/`** → **`neobrutal-a-round/`** K1 + **`ink-sheets-round/`** A — «Чернильный край», **★ 2026-11-02** (пробно с 2026-10-28) | правила в CSS блоков (`styles/mqx/*.css`), токены `--mq-ink-*`; слой `ink.css` и переключатель сняты 2026-11-02 |
-| 18 | **`mascots/`** — `ink-mascots-round` ★, `companions-round` ★ B, `pregame-monetka-round` ★ B (2026-11-02) | `Monetka`, `MonetkaAvatar` (ink, inline SVG) — все места Монетки в prod; `MqxMonetkaVoice` (до выбора роли); `KvityaReceipt` (итоги хода); `MqxCompanionCard` + `CompanionIntroScreen` (знакомство); `#/dev/mqx` «Маскоты» |
+| 18 | [Золотая Монетка и девять поз](../../../../design-lab/mascots/APPROVED.md) · утверждено 19.11.2026 | `Monetka`, `MonetkaAvatar` с позой по сценарию · `#/dev/mqx`, «Маскоты» |
 
 При показе нового превью, утверждении или внедрении обнови запись экрана и пересобери таблицу канона по [правилу актуальности](../../../../docs/README.md#актуальность-и-архив).
 

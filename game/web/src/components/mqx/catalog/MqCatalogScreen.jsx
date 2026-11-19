@@ -1,3 +1,4 @@
+import { DEPOSIT_ANNUAL_RATE_PERCENT } from '../../../constants/investProducts';
 import { BrandLogo } from '../../BrandLogo';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -383,7 +384,7 @@ export function MqCatalogScreen() {
           <MqxJuiceCatalogDemo />
         </CatalogSection>
 
-        <CatalogSection title="Маскоты — Монетка ink (★ 2026-11-02)">
+        <CatalogSection title="Маскоты — золотая Монетка">
           <MqxMascotsCatalogDemo />
         </CatalogSection>
       </section>
@@ -502,7 +503,7 @@ export function MqCatalogScreen() {
 
         <CatalogSection title="Позиция депозита">
           <InvestPositionRow
-            position={{ id: 1, title: 'Депозит · 14% годовых', principal: 250000, annual_rate_percent: 14 }}
+            position={{ id: 1, title: `Депозит · ${DEPOSIT_ANNUAL_RATE_PERCENT}% годовых`, principal: 250000, annual_rate_percent: DEPOSIT_ANNUAL_RATE_PERCENT }}
             onClose={() => {}}
           />
         </CatalogSection>

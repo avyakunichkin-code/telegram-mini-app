@@ -49,12 +49,12 @@ for (const [key,label,buddy,buddyLabel] of personas) {
   emit(within(dist, `assets/${key}-chibi.svg`), human);
   emit(within(dist, `assets/${buddy}.svg`), companion);
 }
-emit(within(project, 'assets/Monetka/monetka-ink-full.svg'), svgDocument(art.window.TH_MONETKA({id:'monetka-design',top:'ТВОЙ ХОД',face:'smile',arms:'wave',label:'Монетка'})));
+emit(within(designRoot, 'archive/monetka-pre-2026-11-19/monetka-ink-full.svg'), svgDocument(art.window.TH_MONETKA({id:'monetka-design',top:'ТВОЙ ХОД',face:'smile',arms:'wave',label:'Монетка'})));
 const landingAssets = [
   ['system/assets/Logos/finance-game/logo-120.webp', 'assets/logo-120.webp'],
   ['system/assets/Logos/finance-game/logo-240.webp', 'assets/logo-240.webp'],
   ['system/assets/Logos/finance-game/logo-480.webp', 'assets/logo-480.webp'],
-  ['system/assets/Monetka/monetka-ink-avatar.svg', 'assets/monetka-ink-avatar.svg'],
+  ['archive/monetka-pre-2026-11-19/monetka-ink-avatar.svg', 'assets/monetka-ink-avatar.svg'],
 ];
 for (const [source, target] of landingAssets) emit(within(dist, target), fs.readFileSync(within(designRoot, source)));
 const tokens = JSON.parse(fs.readFileSync(path.join(project, 'tokens.json'), 'utf8'));
@@ -103,7 +103,16 @@ for (const name of ['TurnCard', 'MoneyTiles', 'EventCard', 'InkEdge']) {
   html = html.replace(/\/_blob\/([a-z0-9]+)/g, (_, blob) => {
     const source = blobs.get(blob);
     if (!source) throw new Error(`Unknown design-system blob: ${blob}`);
-    const currentSource = source.startsWith('assets/Personas/') ? 'assets/Characters/student-chibi.svg' : source.startsWith('assets/Monetka/') ? 'assets/Monetka/monetka-ink-avatar.svg' : source;
+    let currentSource = source;
+    if (source.startsWith('assets/Personas/')) currentSource = 'assets/Characters/student-chibi.svg';
+    if (source.startsWith('assets/Monetka/')) {
+      if (name === 'InkEdge') {
+        const historicalAsset = 'assets/Monetka/monetka-ink-avatar.svg';
+        emit(within(dist, `ds/${historicalAsset}`), fs.readFileSync(within(designRoot, 'archive/monetka-pre-2026-11-19/monetka-ink-avatar.svg')));
+        return `./${historicalAsset}`;
+      }
+      currentSource = 'assets/Monetka/poses/salary-avatar.webp';
+    }
     const target = `ds/${currentSource}`;
     emit(within(dist, target), fs.readFileSync(within(project, currentSource)));
     return `./${currentSource}`;
@@ -117,6 +126,7 @@ emit(path.join(inkArchive, 'ink-preview.html'), fs.readFileSync(within(dist, 'ds
   .replace('./tokens.css', '../../system/tokens.css')
   .replace('./bundle.css', '../../system/components/bundle.css')
   .replace('./ink-examples.css', './InkEdge/examples.css')
+  .replace('./assets/Monetka/monetka-ink-avatar.svg', '../monetka-pre-2026-11-19/monetka-ink-avatar.svg')
   .replaceAll('./assets/', '../../system/assets/'));
 function walk(root) {
   return fs.readdirSync(root, { recursive: true }).filter(file => fs.statSync(path.join(root, file)).isFile()).map(file => file.split(path.sep).join('/')).sort();
@@ -128,7 +138,7 @@ for (const [file] of startPortraits) {
 }
 const assetFiles = walk(path.join(project, 'assets')).filter(file =>
   /\.(png|webp|svg|ico)$/.test(file) &&
-  /^(Logos\/finance-game\/|Characters\/landing-v3\/student-board\.png$|Monetka\/monetka-soft-volume|Icons\/|Actions\/|Capital\/|Menu\/|Needs\/)/.test(file)
+  /^(Logos\/finance-game\/|Characters\/landing-v3\/student-board\.png$|Monetka\/(monetka-gold\.png$|poses\/[^/]+\.png$)|Icons\/|Actions\/|Capital\/|Menu\/|Needs\/)/.test(file)
 );
 emit(path.join(project, 'design-system.json'), JSON.stringify({
   schema_version: 1,

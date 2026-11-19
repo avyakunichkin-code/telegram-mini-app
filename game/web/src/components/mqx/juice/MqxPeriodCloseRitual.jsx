@@ -1,6 +1,6 @@
 import { KvityaReceipt } from '../brand/KvityaReceipt';
 import { MonetkaAvatar } from '../brand/MonetkaAvatar';
-import { periodCloseMonetkaLine, periodCloseRitualPeriodLabel } from '../../../utils/periodCloseRitual';
+import { periodCloseMonetkaReaction, periodCloseRitualPeriodLabel } from '../../../utils/periodCloseRitual';
 import {
   PERIOD_CLOSE_SPAWN_FAILED_COPY,
   periodCloseEventsSpawnFailed,
@@ -48,7 +48,7 @@ export function MqxPeriodCloseRitual({ summary, open, onClose, onClaimGuest }) {
   const periodLabel = periodCloseRitualPeriodLabel(summary);
   const headline = periodCloseBalanceHeadline(summary);
   const detailLines = periodCloseDetailLines(summary);
-  const monetkaLine = periodCloseMonetkaLine(summary);
+  const monetkaReaction = periodCloseMonetkaReaction(summary);
 
   return (
     <div className="mqx-juice-ritual-root mqx-juice-ritual-root--open" role="presentation">
@@ -77,10 +77,10 @@ export function MqxPeriodCloseRitual({ summary, open, onClose, onClaimGuest }) {
             />
           ) : null}
 
-          {monetkaLine ? (
+          {monetkaReaction ? (
             <div className="mqx-juice-ritual__tip">
-              <MonetkaAvatar size={40} />
-              <p className="mqx-juice-ritual__bubble">{monetkaLine}</p>
+              <MonetkaAvatar size={40} pose={monetkaReaction.pose} />
+              <p className="mqx-juice-ritual__bubble">{monetkaReaction.text}</p>
             </div>
           ) : null}
         </div>

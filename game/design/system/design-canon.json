@@ -103,6 +103,24 @@
       ]
     },
     {
+      "name": "Золотая Монетка",
+      "source": "design-lab/mascots/APPROVED.md",
+      "uses": [
+        {
+          "scope": "game-compact",
+          "path": "web/src/components/mqx/brand/Monetka.jsx",
+          "preview": "design-lab/mascots/gold-poses/README.md",
+          "state": "shared"
+        },
+        {
+          "scope": "game-wide",
+          "path": "web/src/components/mqx/brand/MonetkaAvatar.jsx",
+          "preview": "design-lab/mascots/gold-poses/README.md",
+          "state": "shared"
+        }
+      ]
+    },
+    {
       "name": "Завершить ход",
       "source": "design/system/runtime/styles/mqx/layout.css",
       "uses": [

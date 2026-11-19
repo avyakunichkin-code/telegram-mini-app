@@ -135,7 +135,7 @@ export function MqxDashboardHero({
               disabled={!tip?.text}
               onClick={() => helpRef.current?.showModal()}
             >
-              <MonetkaAvatar size={32} />
+              <MonetkaAvatar size={32} pose={tip?.pose} />
             </button>
           </div>
         </div>
