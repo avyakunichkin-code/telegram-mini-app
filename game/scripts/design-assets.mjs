@@ -51,9 +51,9 @@ for (const [key,label,buddy,buddyLabel] of personas) {
 }
 emit(within(project, 'assets/Monetka/monetka-ink-full.svg'), svgDocument(art.window.TH_MONETKA({id:'monetka-design',top:'ТВОЙ ХОД',face:'smile',arms:'wave',label:'Монетка'})));
 const landingAssets = [
-  ['archive/legacy-logo-sources/logo-full-sizes/logo-full-h140.webp', 'assets/logo-full-h140.webp'],
-  ['archive/legacy-logo-sources/logo-full-sizes/logo-full-h210.webp', 'assets/logo-full-h210.webp'],
-  ['archive/legacy-logo-sources/logo-full-sizes/logo-full-h280.webp', 'assets/logo-full-h280.webp'],
+  ['system/assets/Logos/finance-game/logo-120.webp', 'assets/logo-120.webp'],
+  ['system/assets/Logos/finance-game/logo-240.webp', 'assets/logo-240.webp'],
+  ['system/assets/Logos/finance-game/logo-480.webp', 'assets/logo-480.webp'],
   ['system/assets/Monetka/monetka-ink-avatar.svg', 'assets/monetka-ink-avatar.svg'],
 ];
 for (const [source, target] of landingAssets) emit(within(dist, target), fs.readFileSync(within(designRoot, source)));

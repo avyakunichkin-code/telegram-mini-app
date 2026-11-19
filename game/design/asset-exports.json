@@ -2,6 +2,15 @@
   "version": 1,
   "description": "Only sources in this project are editable. Targets are generated compatibility exports.",
   "exports": [
+    {"source":"system/assets/Logos/finance-game/favicon.ico","target":"game/landing/site/assets/favicon.ico"},
+    {"source":"system/assets/Logos/finance-game/logo-social-512.png","target":"game/landing/site/assets/logo-social-512.png"},
+    {"source":"system/assets/Logos/finance-game/logo-480.webp","target":"game/design-lab/board-game/screens-round/assets/logo-480.webp"},
+    {"source":"system/assets/Logos/finance-game/logo-120.webp","target":"game/design-lab/dashboard/pocket-reapproval-round/assets/logo-120.webp"},
+    {"source":"system/assets/Logos/finance-game/logo-240.webp","target":"game/design-lab/dashboard/pocket-reapproval-round/assets/logo-240.webp"},
+    {"source":"system/assets/Logos/finance-game/logo-480.webp","target":"game/design-lab/dashboard/pocket-reapproval-round/assets/logo-480.webp"},
+    {"source":"system/assets/Logos/finance-game/logo-120.webp","target":"game/design-lab/dashboard/turn-continuation-round/assets/logo-120.webp"},
+    {"source":"system/assets/Logos/finance-game/logo-240.webp","target":"game/design-lab/dashboard/turn-continuation-round/assets/logo-240.webp"},
+    {"source":"system/assets/Logos/finance-game/logo-480.webp","target":"game/design-lab/dashboard/turn-continuation-round/assets/logo-480.webp"},
     {"source":"system/assets/Start/board-footer.png","target":"game/web/src/assets/start/board-footer.png"},
     {"source":"system/assets/Start/monetka-b.png","target":"game/web/src/assets/start/monetka-b.png"},
     {"source":"system/assets/Start/welcome-heroes.png","target":"game/web/src/assets/start/welcome-heroes.png"},
@@ -132,22 +141,6 @@
       "target": "game/web/src/assets/needs/home.svg"
     },
     {
-      "source": "archive/legacy-logo-sources/logo-compact.png",
-      "target": "game/web/src/assets/brand/logo-compact.png"
-    },
-    {
-      "source": "archive/legacy-logo-sources/logo-compact.webp",
-      "target": "game/web/src/assets/brand/logo-compact.webp"
-    },
-    {
-      "source": "archive/legacy-logo-sources/logo-full.png",
-      "target": "game/web/src/assets/brand/logo-full.png"
-    },
-    {
-      "source": "archive/legacy-logo-sources/logo-full.webp",
-      "target": "game/web/src/assets/brand/logo-full.webp"
-    },
-    {
       "source": "system/fonts/web/manrope-cyrillic-400-normal.woff2",
       "target": "game/web/src/assets/fonts/manrope-cyrillic-400-normal.woff2"
     },
@@ -244,54 +237,6 @@
       "target": "game/web/src/assets/run-finale-cup/student-mascot-cup-dash.webp"
     },
     {
-      "source": "archive/legacy-logo-sources/logo-full-sizes/logo-full-h105.png",
-      "target": "game/web/src/assets/brand/logo-full-sizes/logo-full-h105.png"
-    },
-    {
-      "source": "archive/legacy-logo-sources/logo-full-sizes/logo-full-h105.webp",
-      "target": "game/web/src/assets/brand/logo-full-sizes/logo-full-h105.webp"
-    },
-    {
-      "source": "archive/legacy-logo-sources/logo-full-sizes/logo-full-h140.png",
-      "target": "game/web/src/assets/brand/logo-full-sizes/logo-full-h140.png"
-    },
-    {
-      "source": "archive/legacy-logo-sources/logo-full-sizes/logo-full-h140.webp",
-      "target": "game/web/src/assets/brand/logo-full-sizes/logo-full-h140.webp"
-    },
-    {
-      "source": "archive/legacy-logo-sources/logo-full-sizes/logo-full-h210.png",
-      "target": "game/web/src/assets/brand/logo-full-sizes/logo-full-h210.png"
-    },
-    {
-      "source": "archive/legacy-logo-sources/logo-full-sizes/logo-full-h210.webp",
-      "target": "game/web/src/assets/brand/logo-full-sizes/logo-full-h210.webp"
-    },
-    {
-      "source": "archive/legacy-logo-sources/logo-full-sizes/logo-full-h280.png",
-      "target": "game/web/src/assets/brand/logo-full-sizes/logo-full-h280.png"
-    },
-    {
-      "source": "archive/legacy-logo-sources/logo-full-sizes/logo-full-h280.webp",
-      "target": "game/web/src/assets/brand/logo-full-sizes/logo-full-h280.webp"
-    },
-    {
-      "source": "archive/legacy-logo-sources/logo-full-sizes/logo-full-h70.png",
-      "target": "game/web/src/assets/brand/logo-full-sizes/logo-full-h70.png"
-    },
-    {
-      "source": "archive/legacy-logo-sources/logo-full-sizes/logo-full-h70.webp",
-      "target": "game/web/src/assets/brand/logo-full-sizes/logo-full-h70.webp"
-    },
-    {
-      "source": "archive/legacy-logo-sources/logo-full-sizes/logo-full-master.png",
-      "target": "game/web/src/assets/brand/logo-full-sizes/logo-full-master.png"
-    },
-    {
-      "source": "archive/legacy-logo-sources/logo-full-sizes/logo-full-master.webp",
-      "target": "game/web/src/assets/brand/logo-full-sizes/logo-full-master.webp"
-    },
-    {
       "source": "system/assets/Icons/metrics/coin.svg",
       "target": "game/web/src/assets/icons/metrics/coin.svg"
     },
@@ -345,15 +290,7 @@
     },
     {
       "source": "archive/legacy-logo-sources/logo-full.png",
-      "target": "game/landing/public/brand/logo-full.png"
-    },
-    {
-      "source": "archive/legacy-logo-sources/logo-full.png",
       "target": "game/docs/archive/brandbook-2026-05/assets/logos/logo-full.png"
-    },
-    {
-      "source": "archive/legacy-logo-sources/logo-full.webp",
-      "target": "game/landing/public/brand/logo-full.webp"
     },
     {
       "source": "archive/legacy-logo-sources/logo-full.webp",
@@ -361,15 +298,7 @@
     },
     {
       "source": "archive/legacy-logo-sources/logo-compact.png",
-      "target": "game/landing/public/brand/logo-compact.png"
-    },
-    {
-      "source": "archive/legacy-logo-sources/logo-compact.png",
       "target": "game/docs/archive/brandbook-2026-05/assets/logos/logo-compact.png"
-    },
-    {
-      "source": "archive/legacy-logo-sources/logo-compact.webp",
-      "target": "game/landing/public/brand/logo-compact.webp"
     },
     {
       "source": "archive/legacy-logo-sources/logo-compact.webp",

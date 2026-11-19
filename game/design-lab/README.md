@@ -61,7 +61,7 @@ cd design-lab/<тема>/<round>
 | [game-templates/](game-templates) | Исходники и портреты | Старый экран шаблонов — в архиве; портреты — [`persona-portraits-round/`](game-templates/persona-portraits-round) |
 | [period-close/](period-close) | **★ в prod** | Иконки строк — lab-раунд B2 |
 | [start-menu/](start-menu) | История | Документация прежнего меню сохранений |
-| [brand-logo/](brand-logo) | **★ → prod** | G1 старт, G2 hero; tagline в G1 |
+| [brand-logo/](brand-logo) | История | G1/G2 от 20.05.2026 · [текущие форматы](../design/system/assets/Logos/README.md) |
 | [game-ui/juice-round/](game-ui/juice-round) | **★ A+C+D → prod** | Gain, turn ritual, salary warn; B Risk — backlog |
 | [character-needs/](character-needs) | **★ v5 в prod** | Z-NEEDS + портрет `dash` из persona-portraits-round |
 | [ui-states-unified/states-icons-round/](ui-states-unified/states-icons-round) | **★ в prod** | S1 C′, S2 B, S3 B/C, S4 A, S5 D0 |

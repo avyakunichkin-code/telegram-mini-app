@@ -1,8 +1,8 @@
 # PWA icons
 
-Источник: `src/assets/brand/logo-compact.png` (G2).
+Источник — [утверждённая монограмма ТХ](../../../design/system/assets/Logos/finance-game/avatar-tx-128.png).
 
-Пересборка (trim прозрачности в PNG, ~2% поля, maskable отдельно):
+Из каталога web пересоберите иконки игры и Apple Touch Icon лендинга с Python и Pillow.
 
 ```bash
 python scripts/generate-brand-icons.py

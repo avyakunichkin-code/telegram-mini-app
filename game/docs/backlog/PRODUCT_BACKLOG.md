@@ -453,7 +453,7 @@ aliases:
 
 #### Фаза 1 — installable PWA
 
-- [x] P1 **[Frontend] PW1-101** — `public/pwa/` иконки из `game/landing/public/brand/logo-compact.png`.
+- [x] P1 **[Frontend] PW1-101** — `public/pwa/` иконки из текущей [утверждённой монограммы ТХ](../../design/system/assets/Logos/finance-game/avatar-tx-128.png).
 - [x] P1 **[Frontend] PW1-102** — `vite-plugin-pwa`: manifest, SW, precache (`vite.config.js`).
 - [x] P1 **[Frontend+Ops] PW1-103** — `start_url` `…/#/`; meta + apple-touch; [`PWA_INSTALL.md`](../foundation/PWA_INSTALL.md).
 - [x] P1 **[Backend+Ops] PW1-104** — CORS origin для prod PWA; `VITE_API_BASE_URL` в CI (`deploy-app.yml` + приёмка: install Safari iOS → игра, 2026-06-01).
