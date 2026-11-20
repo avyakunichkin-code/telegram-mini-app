@@ -10,6 +10,32 @@ from app.models import GameProfile, InvestmentPosition, Transaction
 from app.services.invest.service import buy_bond, open_deposit
 
 
+def test_catalog_deposit_overtakes_unreinvested_bond_coupons_at_twelve_periods():
+    from fincore.forecast import forecast
+    from fincore.household import HouseholdSnapshot, InvestmentPosition as CorePosition
+
+    gains = {}
+    for kind in ("deposit", "bond"):
+        snapshot = HouseholdSnapshot(
+            month_index=1,
+            cash=0,
+            investments=(CorePosition(
+                id=1, kind=kind, title=kind, principal=100_000,
+                annual_rate_percent=INVEST_PRODUCTS[kind].annual_rate_percent,
+                last_accrued_month_index=0,
+            ),),
+        )
+        results = forecast(snapshot, months=12)
+        gains[kind] = [
+            result.cash_end + sum(position.principal for position in result.investments) - 100_000
+            for result in results
+        ]
+
+    assert all(deposit < bond for deposit, bond in zip(gains["deposit"][:11], gains["bond"][:11]))
+    assert gains["deposit"][11] == pytest.approx(16_075.45)
+    assert gains["bond"][11] == pytest.approx(15_999.96)
+
+
 def _profile_ready(db_session, user_id: int, *, cash: float = 500_000) -> GameProfile:
     profile = GameProfile(
         user_id=user_id,
