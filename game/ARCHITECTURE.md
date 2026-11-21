@@ -5,6 +5,8 @@ HTTP-роутеры вызывают сценарии `api/app/services`; дом
 в game, events, needs, victory, finance. ORM-модели и миграции принадлежат API.
 Чистые расчёты — fincore; ORM → DTO адаптеры — `api/app/game/adapters`.
 
+Для тестового стенда GAME выделен домашний Ubuntu Server. Подключение по SSH подтверждено, развёртывание игры впереди. Адрес, доступ и границы первого запуска описаны в [HOME_SERVER](docs/ops/HOME_SERVER.md).
+
 Frontend: api — транспортные адаптеры, hooks/context — координация,
 screens/components — экраны и UI. MQX принадлежит GAME. Перенос каталогов
 не означает завершённый внутренний рефакторинг этих слоёв.

@@ -10,6 +10,7 @@
 
 Окружение — [LOCAL_DEV](docs/ops/LOCAL_DEV.md). Общие библиотеки находятся
 в `../shared/packages`; соседний продукт запускать не требуется.
+Доступ к домашней машине для тестового стенда описан в [HOME_SERVER](docs/ops/HOME_SERVER.md).
 
 Python-окружение продукта — `game/.venv`. Создать из game: `py -3.14 -m venv .venv`;
 затем из api: `../.venv/Scripts/python.exe -m pip install -r requirements-dev.txt`.
