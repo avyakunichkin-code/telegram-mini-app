@@ -9,6 +9,8 @@ aliases:
 ---
 # Локальная разработка (Windows)
 
+Для доступа к домашнему Ubuntu Server см. [HOME_SERVER](HOME_SERVER.md).
+
 Прода сейчас нет (Render выключен, `render.yaml` — история). Вся разработка идёт локально: PostgreSQL 18 + backend на uvicorn + frontend на Vite. Будущий прод — свои серверы, контуры РФ и ЕС отдельно (контейнеры — отдельная задача).
 
 ## Версии

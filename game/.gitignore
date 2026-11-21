@@ -3,3 +3,6 @@
 !/design-lab/archive/README.md
 /docs/archive/local/
 /design/archive/local/
+
+# Параметры доступа к домашнему серверу
+/docs/ops/HOME_SERVER.local.md

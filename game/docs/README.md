@@ -9,6 +9,7 @@
 - [Продуктовые ADR](decisions/)
 - [Аудиты](audits/README.md) — снимки, не канон
 - [Локальная разработка](ops/LOCAL_DEV.md)
+- [Домашний сервер GAME](ops/HOME_SERVER.md)
 
 Общие решения — [корневые ADR](../../docs/decisions/), процессы —
 [engineering](../../docs/engineering/). Документы PLAN не задают поведение игры.
